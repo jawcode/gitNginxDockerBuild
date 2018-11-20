@@ -9,7 +9,7 @@ Install Ubuntu Server x64, tested exclusively on 16.04
 
 ### Installing
 Create a copy (clone / fetch) of this project, or alternatively copy the "create-all" script to the directory where the system will initialize. A home directory is fine. Run `chmod +x create-all` and then run the script with `.\create-all`
-![Initial Clone and Run](https://raw.githubusercontent.com/jacode/gitNginxDockerBuild/master/screen001.png)
+![Initial Clone and Run](https://raw.githubusercontent.com/jawcode/gitNginxDockerBuild/master/screen001.png)
 
 ### Running
 This project will stage the following commands:  
@@ -22,7 +22,7 @@ vanish - Remove all project files, including this script
 clone - Clone the Admin Repo from the Docker container to the local system into the admin folder  
 push - Push any changes in the local admin folder to the repo  
 gen - Generate random scripts in the admin folder for testing  
-![Cloning from the Docker Container and root directory](https://raw.githubusercontent.com/jacode/gitNginxDockerBuild/master/screen002.png)
+![Cloning from the Docker Container and root directory](https://raw.githubusercontent.com/jawcode/gitNginxDockerBuild/master/screen002.png)
 
 ## Authors
 J.A. Waters
