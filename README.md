@@ -11,16 +11,16 @@ Install Ubuntu Server x64, tested exclusively on 16.04
 Create a copy (clone / fetch) of this project, or alternatively copy the "create-all" script to the directory where the system will initialize. A home directory is fine. Run `chmod +x create-all` and then run the script with `.\create-all`
 
 ### Running
-This project will stage the following commands:
-install - Install the Docker image with the latest Dockerfile
-start - Start the Docker container
-stop - Stop the Docker container
-clean - Prune Docker containers
-render - Show the current Docker container web page using Lynx
-vanish - Remove all project files, including this script
-clone - Clone the Admin Repo from the Docker container to the local system into the admin folder
-push - Push any changes in the local admin folder to the repo
-gen - Generate random scripts in the admin folder for testing
+This project will stage the following commands:  
+install - Install the Docker image with the latest Dockerfile  
+start - Start the Docker container  
+stop - Stop the Docker container  
+clean - Prune Docker containers  
+render - Show the current Docker container web page using Lynx  
+vanish - Remove all project files, including this script  
+clone - Clone the Admin Repo from the Docker container to the local system into the admin folder  
+push - Push any changes in the local admin folder to the repo  
+gen - Generate random scripts in the admin folder for testing  
 
 ## Authors
 J.A. Waters
