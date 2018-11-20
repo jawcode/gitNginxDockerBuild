@@ -1,0 +1,185 @@
+# Modify and uncomment the following block to manually set the interface settings
+# If not pre-configured during install, configure network interface for internet access from the new machine
+#  echo "auto lo" | sudo tee /etc/network/interfaces > /dev/null
+#  echo "iface lo inet loopback" | sudo tee --append /etc/network/interfaces > /dev/null
+#  echo "auto ens160" | sudo tee --append /etc/network/interfaces > /dev/null
+#  echo "iface ens160 inet static" | sudo tee --append /etc/network/interfaces > /dev/null
+#  echo "address 192.168.1.5 (83)" | sudo tee --append /etc/network/interfaces > /dev/null
+#  echo "netmask 255.255.255.0" | sudo tee --append /etc/network/interfaces > /dev/null
+#  echo "gateway 192.168.1.254" | sudo tee --append /etc/network/interfaces > /dev/null
+#  echo "broadcast 192.168.1.255" | sudo tee --append /etc/network/interfaces > /dev/null
+#  echo "nameserver 1.1.1.1" | sudo tee --append /etc/resolv.conf > /dev/null
+#
+# Install the command line Lynx browser for testing and verification
+  sudo apt install -y lynx
+# Protect connectivity and allow only SSH and HTTPS traffic through the host environment for external access
+  sudo ufw allow 443/tcp
+  sudo ufw allow 22/tcp
+  sudo ufw allow 222/tcp
+  sudo ufw enable
+# Modify the local SSH port to prevent overlap with the remote server
+  sudo sed -i 's/Port 22/Port 222/g' /etc/ssh/sshd_config
+  systemctl restart sshd
+# Get and run the latest Docker installation script from Docker's public website
+  wget -O dockerInstall.sh https://get.docker.com/
+  chmod +x ./dockerInstall.sh
+  sudo ./dockerInstall.sh
+  rm -f ./dockerInstall.sh
+# Create a directory for the server creation files
+  mkdir gitNGINX
+# Setup local-user SSH keys
+  ssh-keygen -b 2048 -t rsa -f ~/.ssh/id_rsa -q -N ""
+  cp ~/.ssh/id_rsa.pub ./gitNGINX/user_key.pub
+# Define a server file for the NGINX server
+  echo "server {" > ./gitNGINX/default
+  echo "  listen 443 ssl default_server;" >> ./gitNGINX/default
+  echo "  root /var/www/html;" >> ./gitNGINX/default
+  echo "  server_name _;" >> ./gitNGINX/default
+  echo "  ssl on;" >> ./gitNGINX/default
+  echo "  ssl_certificate /etc/ssl/certs/main.cert;" >> ./gitNGINX/default
+  echo "  ssl_certificate_key /etc/ssl/private/main.key;" >> ./gitNGINX/default
+  echo "  index index.php index.html index.htm;" >> ./gitNGINX/default
+  echo "  location / {" >> ./gitNGINX/default
+  echo "  }" >> ./gitNGINX/default
+  echo "  location ~ \.php$ {" >> ./gitNGINX/default
+  echo "    include snippets/fastcgi-php.conf;" >> ./gitNGINX/default
+  echo "    fastcgi_pass unix:/run/php/php7.0-fpm.sock;" >> ./gitNGINX/default
+  echo "  }" >> ./gitNGINX/default
+  echo "  location ~ /\.ht {" >> ./gitNGINX/default
+  echo "    deny all;" >> ./gitNGINX/default
+  echo "  }" >> ./gitNGINX/default
+  echo "}" >> ./gitNGINX/default
+# Define the default webpage for the NGINX server
+  echo '<!DOCTYPE html><html><head><meta charset="utf-8"><title>GIT Scripts of the Empire</title></head>' > ./gitNGINX/index.php
+  echo '<body><?php' >> ./gitNGINX/index.php
+  echo '  chdir("/var/www/scripts");' >> ./gitNGINX/index.php
+  echo '  exec("./viewScript.sh");' >> ./gitNGINX/index.php
+  echo '  $handle = fopen("./output.txt", "r");' >> ./gitNGINX/index.php
+  echo '  if ($handle) {' >> ./gitNGINX/index.php
+  echo '    while (($line = fgets($handle)) !== false) {' >> ./gitNGINX/index.php
+  echo '      echo $line . "<br>";' >> ./gitNGINX/index.php
+  echo '    }' >> ./gitNGINX/index.php
+  echo '    fclose($handle);' >> ./gitNGINX/index.php
+  echo '  }' >> ./gitNGINX/index.php
+  echo '  else {' >> ./gitNGINX/index.php
+  echo '    echo "Something went wrong.";' >> ./gitNGINX/index.php
+  echo '  }' >> ./gitNGINX/index.php
+  echo '?></body></html>' >> ./gitNGINX/index.php
+# Define example scripts
+  echo 'chmod -R +x /home/admin/admin./*.sh' >> ./gitNGINX/viewScript.sh
+  echo 'chown -R admin:www-data /home/admin/admin/*.sh' >> ./gitNGINX/viewScript.sh
+  echo 'echo > output.txt' >> ./gitNGINX/viewScript.sh
+  echo 'for script in /home/admin/admin/*.sh; do bash "$script" -H >> output.txt && echo >> output.txt || break; done' >> ./gitNGINX/viewScript.sh
+  echo 'pwd' > ./gitNGINX/test.sh
+# Define git hooks for publishing "production" files for the web page
+  echo '#!/bin/sh' > ./gitNGINX/update.bk
+  echo 'unset GIT_INDEX_FILE' >> ./gitNGINX/update.bk
+  echo 'git --work-tree=/home/admin/admin --git-dir=/home/admin/admin-source checkout -f' >> ./gitNGINX/update.bk
+  echo "#!/bin/sh" > ./gitNGINX/post-update
+  echo "unset GIT_INDEX_FILE" >> ./gitNGINX/post-update
+  echo "mv /home/admin/admin-source/hooks/post-update /home/admin/admin-source/hooks/post-update.bk" >> ./gitNGINX/post-update
+  echo "mv /home/admin/admin-source/hooks/update.bk /home/admin/admin-source/hooks/post-update" >> ./gitNGINX/post-update
+# Define a Dockerfile file for a git and NGINX container
+  echo '# A basic git and NGINX server.' > ./gitNGINX/Dockerfile
+  echo 'FROM ubuntu:16.04' >> ./gitNGINX/Dockerfile
+  echo 'MAINTAINER J.A. Waters version: 0.1' >> ./gitNGINX/Dockerfile
+  echo 'WORKDIR /etc/nginx' >> ./gitNGINX/Dockerfile
+  echo 'RUN \' >> ./gitNGINX/Dockerfile
+  echo '  apt-get update && \' >> ./gitNGINX/Dockerfile
+  echo '  apt-get install -y nginx curl git-core php-fpm gzip openssh-server && \' >> ./gitNGINX/Dockerfile
+  echo '  rm -rf /var/lib/apt/lists/*' >> ./gitNGINX/Dockerfile
+  # Separate the RUN here to cache APT operations
+  echo 'RUN \' >> ./gitNGINX/Dockerfile
+  echo '  mkdir -p /run/php/ && \' >> ./gitNGINX/Dockerfile
+  echo '  mkdir -p /var/www/scripts && \' >> ./gitNGINX/Dockerfile
+  echo '  mkdir -p /var/www/scripts/store && \' >> ./gitNGINX/Dockerfile
+  echo '  chown -R www-data:www-data /var/lib/nginx && \' >> ./gitNGINX/Dockerfile
+  echo '  chown -R www-data:www-data /var/www && \' >> ./gitNGINX/Dockerfile
+  # Create SSL keys
+  echo '  openssl req -new -newkey rsa:4096 -days 365 -nodes -x509 -subj "/C=US/ST=Empire/L=DidNothing/O=Wrong/CN=empire.didnothing.wrong" \' >> ./gitNGINX/Dockerfile
+  echo '  -keyout /etc/ssl/private/main.key -out /etc/ssl/certs/main.cert && \' >> ./gitNGINX/Dockerfile
+  echo '  chown www-data:www-data /etc/ssl/certs/main.cert && \' >> ./gitNGINX/Dockerfile
+  echo '  chown www-data:www-data /etc/ssl/private/main.key && \' >> ./gitNGINX/Dockerfile
+  # Add a user for git
+  echo '  useradd -p $(openssl passwd -1 empiredidnothingwrong) admin && \' >> ./gitNGINX/Dockerfile
+  echo '  echo "\ndaemon off;" >> /etc/nginx/nginx.conf && \' >> ./gitNGINX/Dockerfile
+  echo '  service ssh start && \' >> ./gitNGINX/Dockerfile
+  echo '  mkdir -p /home/admin && \' >> ./gitNGINX/Dockerfile
+  echo '  mkdir -p /home/admin/.ssh && \' >> ./gitNGINX/Dockerfile
+  echo '  chown -R admin:admin /home/admin && \' >> ./gitNGINX/Dockerfile
+  echo '  su admin -c "git config --global user.email \"admin@empiredonenothin.com\"" && \' >> ./gitNGINX/Dockerfile
+  echo '  su admin -c "git config --global user.name \"Empire SysAdmin\"" && \' >> ./gitNGINX/Dockerfile
+  echo '  cd /home/admin && su admin -c "git init --bare admin-source" && \' >> ./gitNGINX/Dockerfile
+  echo '  su admin -c "git clone admin-source/ admin" && \' >> ./gitNGINX/Dockerfile
+  echo '  chown -R admin:admin /home/admin && \' >> ./gitNGINX/Dockerfile
+  echo '  ssh-keygen -b 2048 -t rsa -f /home/admin/.ssh/id_rsa -q -N "" && \' >> ./gitNGINX/Dockerfile
+  echo '  su admin -c "touch ~/.ssh/authorized_keys"' >> ./gitNGINX/Dockerfile
+  # Copy the site definition files over to the image
+  echo 'COPY --chown=www-data:www-data default /etc/nginx/sites-available/default' >> ./gitNGINX/Dockerfile
+  # Copy the script definition files to the image
+  echo 'COPY --chown=www-data:www-data viewScript.sh /var/www/scripts/viewScript.sh' >> ./gitNGINX/Dockerfile
+  # Copy the default page definition over to the image
+  echo 'COPY --chown=www-data:www-data index.php /var/www/html/index.php' >> ./gitNGINX/Dockerfile
+  # Add local SSH key to remote server
+  echo 'COPY --chown=admin:admin user_key.pub /home/admin/.ssh/user.pub' >> ./gitNGINX/Dockerfile
+  echo 'COPY --chown=admin:admin update.bk /home/admin/admin-source/hooks' >> ./gitNGINX/Dockerfile
+  echo 'COPY --chown=admin:admin post-update /home/admin/admin-source/hooks' >> ./gitNGINX/Dockerfile
+  # Last RUN for file preparations
+  echo 'RUN \' >> ./gitNGINX/Dockerfile
+  echo '  chmod +x /var/www/scripts/viewScript.sh && \' >> ./gitNGINX/Dockerfile
+  echo '  chmod +x /home/admin/admin-source/hooks/update.bk && \' >> ./gitNGINX/Dockerfile
+  echo '  chmod +x /home/admin/admin-source/hooks/post-update && \' >> ./gitNGINX/Dockerfile
+  echo '  cd /home/admin/admin && \' >> ./gitNGINX/Dockerfile
+  echo ' cat /home/admin/.ssh/user.pub >> /home/admin/.ssh/authorized_keys' >> ./gitNGINX/Dockerfile
+  echo 'CMD ["nginx"]' >> ./gitNGINX/Dockerfile
+  echo 'EXPOSE 443' >> ./gitNGINX/Dockerfile
+  echo 'EXPOSE 22' >> ./gitNGINX/Dockerfile
+# Build the new Docker image with the image tag gitnginx001
+  sudo docker build -t gitnginx001 ./gitNGINX/
+# Run the Docker image with the container name GitNGINX001
+  sudo docker run -d --name GitNGINX001 -p 443:443 -p 22:22 gitnginx001 && sudo docker exec GitNGINX001 service php7.0-fpm restart && sudo docker exec GitNGINX001 service ssh restart
+# Generate scripts to run all of this
+# First setup all the basics, install, start, stop, clean, and render
+  mkdir -p ./bin
+  echo "sudo docker build -t gitnginx001 ./gitNGINX/" > ./bin/install.sh
+  echo "sudo docker run -d --name GitNGINX001 -p 443:443 -p 22:22 gitnginx001 && sudo docker exec GitNGINX001 service php7.0-fpm restart && sudo docker exec GitNGINX001 service ssh restart" > ./bin/start.sh
+  echo "sudo docker container kill GitNGINX001" > ./bin/stop.sh
+  echo "sudo docker container prune -f" > ./bin/clean.sh
+  echo "lynx https://127.0.0.1" > ./bin/render.sh
+  echo "rm -Rf *" > ./bin/vanish.sh
+  echo "rm .ssh/id_rsa*" >> ./bin/vanish.sh
+  echo "echo '' > .ssh/known_hosts" >> ./bin/vanish.sh
+# Now generate the git repo and clone to the bare repo on the container
+  echo "git clone ssh://admin@127.0.0.1/home/admin/admin-source admin" >> ./bin/clone.sh
+  echo "cp ./gitNGINX/test.sh ./admin" >> ./bin/clone.sh
+  echo "cd ./admin" >> ./bin/clone.sh
+  echo "git add ." >> ./bin/clone.sh
+  echo "git commit -m 'Initial'" >> ./bin/clone.sh
+  echo "git push -u ssh://admin@127.0.0.1/home/admin/admin-source" >> ./bin/clone.sh
+# Push local admin files to the repo
+  echo "cd ./admin" > ./bin/push.sh
+  echo "git add ." >> ./bin/push.sh
+  echo "echo 'Please add a commit comment: '" >> ./bin/push.sh
+  echo "read uComment" >> ./bin/push.sh
+  echo "git commit -m '\$uComment'" >> ./bin/push.sh
+  echo "git push -u ssh://admin@127.0.0.1/home/admin/admin-source" >> ./bin/push.sh
+# Generate random scripts for testing
+  echo "#\!/bin/bash" > ./bin/gen.sh
+  echo "cd ./admin" >> ./bin/gen.sh
+  echo "rVar=\`date +%s\`" >> ./bin/gen.sh
+  echo "echo \"echo '\$rVar'\" > \$rVar.sh" >> ./bin/gen.sh
+# Permissions
+  chmod +x ./bin/*.sh
+# Symbolic links for prettification
+  ln -s ./bin/install.sh install
+  ln -s ./bin/start.sh start
+  ln -s ./bin/stop.sh stop
+  ln -s ./bin/clean.sh clean
+  ln -s ./bin/render.sh render
+  ln -s ./bin/vanish.sh vanish
+  ln -s ./bin/clone.sh clone
+  ln -s ./bin/push.sh push
+  ln -s ./bin/gen.sh gen
+# Run the project
+
+
