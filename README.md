@@ -26,14 +26,14 @@ This project will stage the following commands:
   
 ### Examples
 After cloning from the Docker Container repo, there is a single file, test.sh, in the admin folder. This script simply runs a `pwd` command.
-![Admin directory after initial cloning](https://raw.githubusercontent.com/jawcode/gitNginxDockerBuild/master/screen003.png)
-![The web page after initial cloning](https://raw.githubusercontent.com/jawcode/gitNginxDockerBuild/master/screen004.png)
-However, using the `./gen` command will add a new script that outputs the Unix Time as of the script generation.  
+![Admin directory after initial cloning](https://raw.githubusercontent.com/jawcode/gitNginxDockerBuild/master/screen003.png)  
+![The web page after initial cloning](https://raw.githubusercontent.com/jawcode/gitNginxDockerBuild/master/screen004.png)  
+However, using the `./gen` command will add a new script that outputs the Unix Time as of the script generation.    
 ![Several generated scripts](https://raw.githubusercontent.com/jawcode/gitNginxDockerBuild/master/screen005.png)  
-Then, the `./push` command can be used to commit these new scripts to the Docker repo
+Then, the `./push` command can be used to commit these new scripts to the Docker repo  
 ![Push command adds these new scripts](https://raw.githubusercontent.com/jawcode/gitNginxDockerBuild/master/screen006.png)  
-And now the web page shows these new script outputs
-![Generated scripts show on the container website](https://raw.githubusercontent.com/jawcode/gitNginxDockerBuild/master/screen007.png)
+And now the web page shows these new script outputs  
+![Generated scripts show on the container website](https://raw.githubusercontent.com/jawcode/gitNginxDockerBuild/master/screen007.png)  
 
 ## Authors
 J.A. Waters
