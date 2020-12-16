@@ -149,6 +149,7 @@
   echo "sudo docker run -d --name GitNGINX001 -p 443:443 -p 22:22 gitnginx001 && sudo docker exec GitNGINX001 service php7.0-fpm restart && sudo docker exec GitNGINX001 service ssh restart" > ./bin/start.sh
   echo "sudo docker container kill GitNGINX001" > ./bin/stop.sh
   echo "sudo docker container prune -f && rm -Rf admin" > ./bin/clean.sh
+  echo "mkdir ./admin" >> ./bin/clean.sh
   echo "lynx https://127.0.0.1" > ./bin/render.sh
   echo "rm -Rf *" > ./bin/vanish.sh
   echo "rm .ssh/id_rsa*" >> ./bin/vanish.sh
@@ -185,5 +186,6 @@
   ln -s ./bin/push.sh push
   ln -s ./bin/gen.sh gen
 # Run the project
-
-
+./stop
+./clean
+./start
