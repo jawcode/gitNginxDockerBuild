@@ -152,8 +152,8 @@
   echo "mkdir ./admin" >> ./bin/clean.sh
   echo "lynx https://127.0.0.1" > ./bin/render.sh
   echo "rm -Rf *" > ./bin/vanish.sh
-  echo "rm .ssh/id_rsa*" >> ./bin/vanish.sh
-  echo "echo '' > .ssh/known_hosts" >> ./bin/vanish.sh
+  echo "rm ~/.ssh/id_rsa*" >> ./bin/vanish.sh
+  echo "echo '' > ~/.ssh/known_hosts" >> ./bin/vanish.sh
 # Now generate the git repo and clone to the bare repo on the container
   echo "git clone ssh://admin@127.0.0.1/home/admin/admin-source admin" >> ./bin/clone.sh
   echo "cp ./gitNGINX/test.sh ./admin" >> ./bin/clone.sh
