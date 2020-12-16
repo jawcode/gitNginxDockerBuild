@@ -189,3 +189,4 @@
 ./stop
 ./clean
 ./start
+./clone
