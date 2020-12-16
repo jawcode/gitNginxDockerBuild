@@ -18,7 +18,7 @@
   sudo ufw allow 222/tcp
   sudo ufw enable
 # Modify the local SSH port to prevent overlap with the remote server
-  sudo sed -i 's/Port 22/Port 222/g' /etc/ssh/sshd_config
+  sudo sed -i 's/Port 22.*/Port 222/g' /etc/ssh/sshd_config
   systemctl restart sshd
 # Get and run the latest Docker installation script from Docker's public website
   wget -O dockerInstall.sh https://get.docker.com/
