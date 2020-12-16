@@ -41,8 +41,3 @@ J.A. Waters
 ## License
 
 This project is licensed under the MIT License
-
-## Acknowledgments
-
-* The Empire Did Nothing Wrong
-
