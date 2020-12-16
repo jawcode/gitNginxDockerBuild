@@ -140,6 +140,7 @@
   sudo docker run -d --name GitNGINX001 -p 443:443 -p 22:22 gitnginx001 && sudo docker exec GitNGINX001 service php7.0-fpm restart && sudo docker exec GitNGINX001 service ssh restart
 # Generate scripts to run all of this
 # First setup all the basics, install, start, stop, clean, and render
+  mkdir -p ./admin
   mkdir -p ./bin
   echo "sudo docker build -t gitnginx001 ./gitNGINX/" > ./bin/install.sh
   echo "sudo docker run -d --name GitNGINX001 -p 443:443 -p 22:22 gitnginx001 && sudo docker exec GitNGINX001 service php7.0-fpm restart && sudo docker exec GitNGINX001 service ssh restart" > ./bin/start.sh
