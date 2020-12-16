@@ -66,10 +66,10 @@
   echo '  }' >> ./gitNGINX/index.php
   echo '?></body></html>' >> ./gitNGINX/index.php
 # Define example scripts
-  echo 'chmod -R +x /home/admin/admin/*.sh' > viewScript.sh
-  echo 'chown -R admin:www-data /home/admin/admin/*.sh' >> viewScript.sh
-  echo 'echo > output.txt' >> viewScript.sh
-  echo "find /home/admin/admin/*.sh -type f -execdir basename '{}' ';' > output.txt" >> viewScript.sh
+  echo 'chmod -R +x /home/admin/admin/*.sh' > ./gitNGINX/viewScript.sh
+  echo 'chown -R admin:www-data /home/admin/admin/*.sh' >> ./gitNGINX/viewScript.sh
+  echo 'echo > output.txt' >> ./gitNGINX/viewScript.sh
+  echo "find /home/admin/admin/*.sh -type f -execdir basename '{}' ';' > output.txt" >> ./gitNGINX/viewScript.sh
   echo 'pwd' > ./gitNGINX/test.sh
 # Define git hooks for publishing "production" files for the web page
   echo '#!/bin/sh' > ./gitNGINX/update.bk
@@ -140,7 +140,6 @@
   sudo docker run -d --name GitNGINX001 -p 443:443 -p 22:22 gitnginx001 && sudo docker exec GitNGINX001 service php7.0-fpm restart && sudo docker exec GitNGINX001 service ssh restart
 # Generate scripts to run all of this
 # First setup all the basics, install, start, stop, clean, and render
-  mkdir -p ./admin
   mkdir -p ./bin
   git config --global user.email "local@localhost"
   git config --global user.name "local"
