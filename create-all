@@ -49,8 +49,8 @@
   echo "    deny all;" >> ./gitNGINX/default
   echo "  }" >> ./gitNGINX/default
   echo "}" >> ./gitNGINX/default
-# Define the default webpage for the NGINX server
-  echo '<!DOCTYPE html><html><head><meta charset="utf-8"><title>GIT Scripts of the Empire</title></head>' > ./gitNGINX/index.php
+# Define a default webpage for the NGINX server
+  echo '<!DOCTYPE html><html><head><meta charset="utf-8"><title>GIT Script Listing</title></head>' > ./gitNGINX/index.php
   echo '<body><?php' >> ./gitNGINX/index.php
   echo '  chdir("/var/www/scripts");' >> ./gitNGINX/index.php
   echo '  exec("./viewScript.sh");' >> ./gitNGINX/index.php
@@ -96,19 +96,19 @@
   echo '  chown -R www-data:www-data /var/lib/nginx && \' >> ./gitNGINX/Dockerfile
   echo '  chown -R www-data:www-data /var/www && \' >> ./gitNGINX/Dockerfile
   # Create SSL keys
-  echo '  openssl req -new -newkey rsa:4096 -days 365 -nodes -x509 -subj "/C=US/ST=Empire/L=DidNothing/O=Wrong/CN=empire.didnothing.wrong" \' >> ./gitNGINX/Dockerfile
+  echo '  openssl req -new -newkey rsa:4096 -days 365 -nodes -x509 -subj "/C=US/ST=lclsys/L=tmpsys/O=thissys/CN=lclsys.tmpsys.thissys" \' >> ./gitNGINX/Dockerfile
   echo '  -keyout /etc/ssl/private/main.key -out /etc/ssl/certs/main.cert && \' >> ./gitNGINX/Dockerfile
   echo '  chown www-data:www-data /etc/ssl/certs/main.cert && \' >> ./gitNGINX/Dockerfile
   echo '  chown www-data:www-data /etc/ssl/private/main.key && \' >> ./gitNGINX/Dockerfile
   # Add a user for git
-  echo '  useradd -p $(openssl passwd -1 empiredidnothingwrong) admin && \' >> ./gitNGINX/Dockerfile
+  echo '  useradd -p $(openssl passwd -1 thisisatemppasswordofcourse) admin && \' >> ./gitNGINX/Dockerfile
   echo '  echo "\ndaemon off;" >> /etc/nginx/nginx.conf && \' >> ./gitNGINX/Dockerfile
   echo '  service ssh start && \' >> ./gitNGINX/Dockerfile
   echo '  mkdir -p /home/admin && \' >> ./gitNGINX/Dockerfile
   echo '  mkdir -p /home/admin/.ssh && \' >> ./gitNGINX/Dockerfile
   echo '  chown -R admin:admin /home/admin && \' >> ./gitNGINX/Dockerfile
-  echo '  su admin -c "git config --global user.email \"admin@empiredonenothin.com\"" && \' >> ./gitNGINX/Dockerfile
-  echo '  su admin -c "git config --global user.name \"Empire SysAdmin\"" && \' >> ./gitNGINX/Dockerfile
+  echo '  su admin -c "git config --global user.email \"admin@lclsys.tmpsys\"" && \' >> ./gitNGINX/Dockerfile
+  echo '  su admin -c "git config --global user.name \"Temp SysAdmin\"" && \' >> ./gitNGINX/Dockerfile
   echo '  cd /home/admin && su admin -c "git init --bare admin-source" && \' >> ./gitNGINX/Dockerfile
   echo '  su admin -c "git clone admin-source/ admin" && \' >> ./gitNGINX/Dockerfile
   echo '  chown -R admin:admin /home/admin && \' >> ./gitNGINX/Dockerfile
