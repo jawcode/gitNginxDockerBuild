@@ -6,7 +6,7 @@ Begin with a fresh Ubuntu Server x64 16+ Machine: http://mirror.math.princeton.e
 
 Once it's confirmed that you have good connectivity, run the "create-all" script.
 
-After the script completes, use the "clone" command to synchronize with the container's generated master.
+After the script completes, it finishes with a "clone" command and synchronizes with the container's generated master.
 Next, create some files in the "admin" folder, or use the "gen" command to create some example files to push.
 Then, use the "push" command to send a commit with those latest files.
 An https website will be available at the host system's IP that lists the latest files.
