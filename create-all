@@ -66,10 +66,10 @@
   echo '  }' >> ./gitNGINX/index.php
   echo '?></body></html>' >> ./gitNGINX/index.php
 # Define example scripts
-  echo 'chmod -R +x /home/admin/admin/admin./*.sh' >> ./gitNGINX/viewScript.sh
-  echo 'chown -R admin:www-data /home/admin/admin/admin/*.sh' >> ./gitNGINX/viewScript.sh
-  echo 'echo > output.txt' >> ./gitNGINX/viewScript.sh
-  echo 'for script in /home/admin/admin/admin/*.sh; do bash "$script" -H >> output.txt && echo >> output.txt || break; done' >> ./gitNGINX/viewScript.sh
+  echo 'chmod -R +x /home/admin/admin/*.sh' > viewScript.sh
+  echo 'chown -R admin:www-data /home/admin/admin/*.sh' >> viewScript.sh
+  echo 'echo > output.txt' >> viewScript.sh
+  echo "find /home/admin/admin/*.sh -type f -execdir basename '{}' ';' > output.txt" >> viewScript.sh
   echo 'pwd' > ./gitNGINX/test.sh
 # Define git hooks for publishing "production" files for the web page
   echo '#!/bin/sh' > ./gitNGINX/update.bk
