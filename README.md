@@ -2,7 +2,7 @@
 This project contains a script, "create-all", that generates additional scripts, a Dockerfile, and configurations to automatically build and run a Docker container with git and NGINX along with pre-staging a repo.
 
 ## Getting Started
-Begin with a fresh Ubuntu Server x64 16+ Machine: http://mirror.math.princeton.edu/pub/ubuntu-iso/16.04.7/ubuntu-16.04.7-desktop-amd64.iso *Include the openSSH package for remote access. If not pre-configured during install, configure network interface for public network and DNS access from the new machine.
+Begin with a fresh Ubuntu Server x64 16+ Machine: e.g. https://mirror.math.princeton.edu/pub/ubuntu-iso/16.04.7/ubuntu-16.04.7-server-amd64.iso *Include the openSSH package for remote access. If not pre-configured during install, configure network interface for public network and DNS access from the new machine.
 
 Once it's confirmed that you have good connectivity, run the "create-all" script.
 
